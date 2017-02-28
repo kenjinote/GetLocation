@@ -8,7 +8,7 @@
 #include <shlwapi.h>
 #include <new>
 
-#define DEFAULT_WAIT_FOR_LOCATION_REPORT 500
+#define DEFAULT_WAIT_FOR_LOCATION_REPORT 5000
 TCHAR szClassName[] = TEXT("Window");
 
 DEFINE_PROPERTYKEY(SENSOR_DATA_TYPE_LATITUDE_DEGREES, 0x055c74d8, 0xca6f, 0x47d6, 0x95, 0xc6, 0x1e, 0xd3, 0x63, 0x7a, 0x0f, 0xf4, 2);
@@ -72,10 +72,10 @@ public:
 
 	IFACEMETHODIMP OnStatusChanged(REFIID /*reportType*/, LOCATION_REPORT_STATUS status)
 	{
-		if (REPORT_RUNNING == status)
-		{
-			::SetEvent(_hDataEvent);
-		}
+		//if (REPORT_RUNNING == status)
+		//{
+		//	::SetEvent(_hDataEvent);
+		//}
 		return S_OK;
 	}
 
@@ -113,7 +113,6 @@ HRESULT WaitForLocationReport(
 				HRESULT hrWait = CoWaitForMultipleHandles(0, dwTimeToWait, 1, &hEvent, &dwIndex);
 				if ((S_OK == hrWait) || (RPC_S_CALLPENDING == hrWait))
 				{
-					Sleep(5000);
 					hr = pLocation->GetReport(reportType, ppLocationReport);
 					if (FAILED(hr) && (RPC_S_CALLPENDING == hrWait))
 					{
